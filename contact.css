@@ -1,0 +1,138 @@
+/* Contact Section */
+.contact {
+  width: 100%;
+}
+
+.con_1 {
+  display: flex;
+  gap: 10px; 
+  text-align: center;
+}
+
+.con1_1 {
+  text-align: center;
+  width: 50%;
+}
+
+.con1_2 {
+  text-align: center;
+  gap: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.san_div {
+  display: flex;
+  justify-content: space-around;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .contact {
+      width: 100%;
+  }
+
+  .con_1 {
+      flex-direction: column; /* Adjusted for better responsiveness */
+      gap: 10px;
+  }
+
+  .con1_1, .con1_2 {
+      width: 100%;
+  }
+}
+
+/* Main Container */
+.mainc {
+  border: 1px solid black;
+  width: 90%; 
+  max-width: 1300px; 
+  margin: 0 auto;
+  box-sizing: border-box; 
+}
+
+.div_1, .div_2 {
+  width: 48%;
+  margin: 1%;
+  float: left;
+  box-sizing: border-box; 
+}
+
+.p_h {
+  margin: 20px 5%;
+  float: left;
+  width: 90%; 
+}
+
+input[type="submit"], input[type="reset"] {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: black;
+  color: wheat;
+  border: none;
+  cursor: pointer;
+}
+
+input[type="submit"]:hover, input[type="reset"]:hover {
+  background-color: wheat;
+  color: black;
+}
+
+.add {
+  margin: 10px 5%;
+  width: auto;
+}
+
+/* Footer */
+.footer {
+  background-color: rgb(8, 3, 3);
+  color: white;
+  width: 100%; 
+  text-align: center;
+  padding: 10px 0;
+}
+
+/* Hope Section */
+.hope {
+  border: 1px solid black;
+  width: 45%; 
+  max-width: 200px;
+  margin: 10px auto;
+  background-color: black;
+  color: white;
+  text-align: center;
+  line-height: 200px;
+}
+
+.hope:hover {
+  color: yellow;
+}
+
+/* Responsive Design for Smaller Screens */
+@media (max-width: 768px) {
+  .div_1, .div_2, .hope {
+      width: 100%;
+      float: none;
+      margin: 10px auto;
+  }
+
+  .p_h, .add {
+      margin: 20px auto;
+      width: 95%; 
+  }
+}
+
+@media (max-width: 480px) {
+  .mainc {
+      width: 100%; 
+  }
+
+  input[type="submit"], input[type="reset"] {
+      width: 100%; 
+      padding: 10px; 
+  }
+
+  .footer {
+      padding: 10px;
+  }
+}

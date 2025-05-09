@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Registration</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #74ebd5, #acb6e5);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        #User_form {
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            text-align: left;
+            color: #555;
+        }
+
+        .seet, #Number {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .seet:focus, #Number:focus {
+            border-color: #007bff;
+            outline: none;
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+        }
+
+        #submit {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            width: 100%;
+        }
+
+        #submit:hover {
+            background-color: #0056b3;
+            transform: scale(1.02);
+        }
+
+        #output {
+            margin-top: 20px;
+            color: #d9534f;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .Create_otp {
+            display: none;
+        }
+
+        #verify {
+            height: 40px;
+            width: 80px;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        #verify:hover {
+            background-color: #0056b3;
+            color: greenyellow;
+        }
+
+        .form-footer {
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        .form-footer a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <form id="User_form" onsubmit="submit(event)">
+        <h1>User Registration</h1>
+        <div class="form-group">
+            <label for="fname">First Name</label>
+            <input class="seet" type="text" id="fname" name="First_Name" placeholder="Enter your first name" maxlength="8" required>
+        </div>
+
+        <div class="form-group">
+            <label for="lname">Last Name</label>
+            <input class="seet" type="text" id="lname" name="Last_Name" placeholder="Enter your last name" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input class="seet" type="email" id="email" name="email" placeholder="Enter the email" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input class="seet" type="password" id="pass_1" name="password" placeholder="Enter your password" required>
+        </div>
+
+        <div class="form-group">
+            <label for="Conform_password">Confirm Password</label>
+            <input class="seet" type="password" id="pass_2" name="password" placeholder="Confirm your password" required>
+        </div>
+
+        <div class="form-group">
+            <label for="Moblie_Number">Mobile Number</label>
+            <input type="text" name="Moblie_No" id="Number" placeholder="Enter your mobile number" required>
+        </div>
+
+        <input id="submit" type="submit" value="Register">
+        <div id="output"></div>
+        <div class="Create_otp">
+            <input class="seet" type="number" name="otp" id="otp" placeholder="Enter the OTP">
+            <button id="verify" onclick="verifyOtp()">Verify OTP</button>
+        </div>
+        <div class="form-footer">
+            Already have an account? <a href="log_in.html">Login here</a>
+        </div>
+    </form>
+    
+    <script>
+        function submit(e) {
+            e.preventDefault();
+
+            const fname = document.getElementById("fname").value;
+            const lname = document.getElementById("lname").value;
+            const email = document.getElementById("email").value;
+            const number = document.getElementById("Number").value;
+            const password = document.getElementById("pass_1").value;
+            const confirmPassword = document.getElementById("pass_2").value;
+            const Create_otp = document.getElementsByClassName("Create_otp")[0]; 
+            const output = document.getElementById("output");
+            output.innerHTML = "";
+
+            if (password !== confirmPassword) {
+                output.innerHTML = "Passwords do not match!";
+                return;
+            }
+
+            let users = JSON.parse(localStorage.getItem("users")) || [];
+            let existingUser = users.find(user => user.email === email);
+
+            if (existingUser) {
+                alert("User already exists!");
+                return;
+            }
+
+            // Send OTP to email and mobile using backend
+            fetch("http://localhost:3000/send-otp", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ number })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message === "OTP sent successfully") {
+                    alert("OTP sent to your mobile number!");
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert("Error sending OTP");
+            });
+        }
+
+        function verifyOtp() {
+            const enteredOtp = document.getElementById("otp").value;
+            const storedOtp = localStorage.getItem("RandomNumber");
+
+            if (enteredOtp === storedOtp) {
+                alert("OTP verified successfully!");
+                // Save user data
+                const fname = document.getElementById("fname").value;
+                const lname = document.getElementById("lname").value;
+                const email = document.getElementById("email").value;
+                const number = document.getElementById("Number").value;
+                const password = document.getElementById("pass_1").value;
+
+                let users = JSON.parse(localStorage.getItem("users")) || [];
+                users.push({ fname, lname, email, number, password });
+                localStorage.setItem("users", JSON.stringify(users));
+
+                alert("Registration successful!");
+                window.location.href = "log_in.html";
+            } else {
+                alert("Invalid OTP. Please try again.");
+            }
+        }
+    </script>
+</body>
+</html>
